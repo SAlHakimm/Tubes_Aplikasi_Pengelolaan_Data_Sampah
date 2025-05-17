@@ -4,7 +4,6 @@ import "fmt"
 
 type Sampah struct {
 	Jenis_Sampah  string
-	Tipe_Sampah   string
 	Jumlah_Sampah int
 }
 
@@ -38,12 +37,26 @@ func main() {
 			PenjelasanSampah()
 		case 2:
 			InputSampah(&Data, &nData)
+			fmt.Println()
+			fmt.Println()
 		case 3:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
-				CariData()
+				var Jenis string
+				fmt.Println("==========Selamat Datang di Menu Cari Sampah==========")
+				fmt.Println("")
+				fmt.Println("Jenis Sampah apa yang kamu cari? ")
+				fmt.Scan(&Jenis)
+				nama, jumlah, ditemukan := CariDataSeq(&Data, nData, Jenis)
+				if ditemukan {
+					fmt.Println("Sampah", nama, "memiliki jumlah:", jumlah, "kg")
+				} else {
+					fmt.Println("Data sampah", Jenis, "tidak ditemukan")
+				}
 			}
+			fmt.Println()
+			fmt.Println()
 		case 4:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
@@ -90,16 +103,18 @@ func PenjelasanSampah() {
 }
 
 func InputSampah(A *DataSampah, n *int) {
-	var i int
+	var i int = 0
 	fmt.Println("==========Selamat Datang di Menu Input Sampah==========")
 	fmt.Println("")
 	fmt.Println("Masukan data sampah yang akan diinputkan")
 	fmt.Println("Format input: Tipe_Sampah Sampah Berat(Kg)")
 	fmt.Println("Contoh: Anorganik Plastik 5")
-	fmt.Println("Isi # # 0 ketika sudah selesai mengimput sampah")
+	fmt.Println("Catatan: Isi dengan '# 0' ketika sudah selesai menginput sampah")
+	fmt.Println("")
+	fmt.Println("Silahkan Masukan Data Sampah:")
 	for {
-		fmt.Scan(&A[i].Jenis_Sampah, &A[i].Tipe_Sampah, &A[i].Jumlah_Sampah)
-		if A[i].Jenis_Sampah == "#" && A[i].Tipe_Sampah == "#" && A[i].Jumlah_Sampah == 0 {
+		fmt.Scan(&A[i].Jenis_Sampah, &A[i].Jumlah_Sampah)
+		if A[i].Jenis_Sampah == "#" && A[i].Jumlah_Sampah == 0 {
 			break
 		}
 		nData++
@@ -107,9 +122,18 @@ func InputSampah(A *DataSampah, n *int) {
 	}
 }
 
-func BacaData(A DataSampah, n int) {
-	var i int
+func CariDataSeq(A *DataSampah, n int, x string) (string, int, bool) {
+	var i, jumlah int
+	var nama string
+	var ditemukan bool
+	ditemukan = false
 	for i = 0; i < n; i++ {
-		fmt.Scan(A[i].Jenis_Sampah, A[i].Tipe_Sampah, A[i].Jumlah_Sampah)
+		if A[i].Jenis_Sampah == x {
+			nama = A[i].Jenis_Sampah
+			jumlah = A[i].Jumlah_Sampah
+			ditemukan = true
+			return nama, jumlah, ditemukan
+		}
 	}
+	return "", 0, ditemukan
 }
