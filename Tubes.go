@@ -21,9 +21,10 @@ func tampilanMenu() {
 	fmt.Println("")
 	fmt.Println("1. Penjelasan Jenis Sampah ")
 	fmt.Println("2. Input Data Sampah")
-	fmt.Println("3. Cari Data Sampah")
-	fmt.Println("4. Urutkan Data Sampah")
-	fmt.Println("5. Tampilkan Statistik Data Sampah")
+	fmt.Println("3. Tambah dan Hapus Data Sampah")
+	fmt.Println("4. Tampilkan Semua Data Sampah atau Cari Data Sampah")
+	fmt.Println("5. Urutkan Data Sampah")
+	fmt.Println("6. Tampilkan Statistik Data Sampah")
 	fmt.Println("0. Keluar")
 	fmt.Println(" ")
 	fmt.Print("Pilih 1/2/3/4/5/0? ")
@@ -44,29 +45,116 @@ func main() {
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
-				cariData()
+				tambahHapusData()
 				fmt.Println()
 			}
 		case 4:
+			var pilih int
+			if nData == 0 {
+				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
+			} else {
+				fmt.Println()
+				fmt.Println("==========Selamat Datang di Menu Baca dan Cari Data Sampah==========")
+				fmt.Println("")
+				fmt.Println("1. Cari Data Sampah ")
+				fmt.Println("2. Baca semua Data Sampah")
+				fmt.Println("3. Keluar")
+				fmt.Print("Pilih 1/2/3? ")
+				fmt.Scan(&pilih)
+				fmt.Println()
+				if pilih == 1 {
+					cariData()
+					fmt.Println()
+				} else if pilih == 2 {
+					bacaData(Data, nData)
+					fmt.Println()
+				}
+			}
+		case 5:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
 				pengurutanData()
 				fmt.Println()
 			}
-		case 5:
+		case 6:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
 				StatistikData()
+				fmt.Println()
 			}
-		case 6:
+		case 7:
 		}
 		if pilihan == 0 {
 			break
 		}
 	}
 
+}
+
+func bacaData(A DataSampah, n int) {
+	fmt.Println("Sampah yang sudah kamu inputkan: ")
+	for i := 0; i < n; i++ {
+		fmt.Println(i+1, ". ", A[i].Jenis_Sampah, A[i].Jumlah_Sampah)
+	}
+}
+
+func tambahHapusData() {
+	var x int
+	fmt.Println()
+	fmt.Println("==========Selamat Datang di Menu Tambah dan Hapus Sampah==========")
+	fmt.Println("")
+	fmt.Println()
+	fmt.Println("1. Tambah Data Sampah")
+	fmt.Println("2. Hapus Data Sampah")
+	fmt.Println("3. Keluar")
+	fmt.Print("Pilih 1/2/3? ")
+	fmt.Scan(&x)
+	fmt.Println()
+	if x == 1 {
+		fmt.Println()
+		TambahData(&Data, &nData)
+	} else if x == 2 {
+		fmt.Println("Data sampah mana yang ingin anda hapus?")
+		hapusData(&Data, &nData)
+	}
+}
+
+func TambahData(A *DataSampah, n *int) {
+	fmt.Println("Silahkan masukan data sampah yang ingin kamu tambahkan:")
+	fmt.Println()
+	fmt.Print("Masukan Jenis Sampah: ")
+	fmt.Scan(&A[*n].Jenis_Sampah)
+
+	fmt.Print("Masukan Jumlah Sampah (kg): ")
+	fmt.Scan(&A[*n].Jumlah_Sampah)
+	*n = *n + 1
+	fmt.Println()
+	fmt.Println("Data Telah Ditambahkan :)")
+}
+
+func hapusData(A *DataSampah, n *int) {
+	var i, j int
+	var jenis string
+	var ketemu bool = false
+
+	fmt.Print("Masukan Jenis Sampah yang akan dihapus: ")
+	fmt.Scan(&jenis)
+
+	for i = 0; i < *n && ketemu == false; i++ {
+		if A[i].Jenis_Sampah == jenis {
+			for j = i; j < *n-1; j++ {
+				A[j] = A[j+1]
+			}
+			fmt.Println("Data Berhasil Dihapus :)")
+			ketemu = true
+			*n = *n - 1
+		}
+	}
+	if ketemu == false {
+		fmt.Println("Data yang kamu ingin hapus tidak ditemukan:(")
+	}
 }
 
 func cariData() {
@@ -91,8 +179,9 @@ func pengurutanData() {
 	fmt.Println("")
 	fmt.Println("1. Pengurutan berdasarkan banyaknya sampah yang paling berat")
 	fmt.Println("2. Pengurutan berdasarkan banyaknya sampah yang paling ringan")
-	fmt.Println("3. Keluar")
-	fmt.Print("Pilih 1/2/3? ")
+	fmt.Println("3. Pengurutan berdasarkan Jenis Sampah")
+	fmt.Println("4. Keluar")
+	fmt.Print("Pilih 1/2/3/4? ")
 	fmt.Scan(&Pilih)
 	if Pilih == 1 {
 		fmt.Println()
@@ -105,7 +194,10 @@ func pengurutanData() {
 		SortDataMinInsert(&Data, nData)
 		cetakDataSort(Data, nData)
 	} else if Pilih == 3 {
-		tampilanMenu()
+		fmt.Println()
+		fmt.Println("Pengurutan data sampah berdasarkan jenis: ")
+		SortDataJenisInset(&Data, nData)
+		cetakDataSort(Data, nData)
 	}
 }
 
@@ -141,7 +233,9 @@ func InputSampah(A *DataSampah, n *int) {
 	fmt.Println("")
 	fmt.Println("Masukan data sampah yang akan diinputkan")
 	fmt.Println("Format input: Sampah Berat(Kg)")
-	fmt.Println("Contoh: Plastik 5")
+	fmt.Println("Contoh: ")
+	fmt.Println("Masukan Jenis Sampah: Plastik")
+	fmt.Println("Masukan Jumlah Sampah (kg): 5")
 	fmt.Println("Catatan: Isi dengan '# 0' ketika sudah selesai menginput sampah")
 	fmt.Println("")
 	fmt.Println("Silahkan Masukan Data Sampah:")
@@ -213,9 +307,50 @@ func SortDataMinInsert(A *DataSampah, n int) {
 	}
 }
 
+func SortDataJenisInset(A *DataSampah, n int) {
+	var pass, i int
+	var temp Sampah
+	pass = 1
+	for pass < n {
+		i = pass
+		temp = A[pass]
+		for i > 0 && temp.Jenis_Sampah < A[i-1].Jenis_Sampah {
+			A[i].Jenis_Sampah = temp.Jenis_Sampah
+			i--
+		}
+		A[i].Jenis_Sampah = temp.Jenis_Sampah
+		pass++
+	}
+}
+
 func cetakDataSort(A DataSampah, n int) {
 	var i int
 	for i = 0; i < n; i++ {
-		fmt.Println(A[i].Jenis_Sampah, A[i].Jumlah_Sampah)
+		fmt.Println(i+1, ". ", A[i].Jenis_Sampah, A[i].Jumlah_Sampah)
 	}
+}
+
+func StatistikData() {
+	var Pilih int
+	fmt.Println()
+	fmt.Println("==========Selamat Datang di Menu Statistik Data Sampah==========")
+	fmt.Println("")
+	fmt.Println("Apa yang ingin anda lihat ketahui?")
+	fmt.Println("1. Jumlah Total Data Sampah Yang Sudah Dikumpulkan")
+	fmt.Println("2. Jumlah Total Data Sampah Yang di Daur Ulang")
+	fmt.Println("3. Keluar")
+	fmt.Print("Pilih 1/2/3? ")
+	fmt.Scan(&Pilih)
+	fmt.Println()
+	if Pilih == 1 {
+		JumlahDataSampah(Data, nData)
+	}
+}
+
+func JumlahDataSampah(A DataSampah, n int) {
+	var i, jumlah int
+	for i = 0; i < n; i++ {
+		jumlah = jumlah + A[i].Jumlah_Sampah
+	}
+	fmt.Println("Jumlah Sampah Yang Berhasil Dikumpulkan Seberat ", jumlah, " kg")
 }
