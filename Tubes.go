@@ -27,7 +27,7 @@ func tampilanMenu() {
 	fmt.Println("6. Tampilkan Statistik Data Sampah")
 	fmt.Println("0. Keluar")
 	fmt.Println(" ")
-	fmt.Print("Pilih 1/2/3/4/5/0? ")
+	fmt.Print("Pilih 1/2/3/4/5/6/0? ")
 }
 
 func main() {
