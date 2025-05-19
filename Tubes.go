@@ -21,7 +21,7 @@ func tampilanMenu() {
 	fmt.Println("")
 	fmt.Println("1. Penjelasan Jenis Sampah ")
 	fmt.Println("2. Input Data Sampah")
-	fmt.Println("3. Tambah dan Hapus Data Sampah")
+	fmt.Println("3. Tambah, Edit, dan Hapus Data Sampah")
 	fmt.Println("4. Tampilkan Semua Data Sampah atau Cari Data Sampah")
 	fmt.Println("5. Urutkan Data Sampah")
 	fmt.Println("6. Tampilkan Statistik Data Sampah")
@@ -49,24 +49,15 @@ func main() {
 				fmt.Println()
 			}
 		case 4:
-			var pilih int
+			var x string
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
-				fmt.Println()
-				fmt.Println("==========Selamat Datang di Menu Baca dan Cari Data Sampah==========")
-				fmt.Println("")
-				fmt.Println("1. Cari Data Sampah ")
-				fmt.Println("2. Baca semua Data Sampah")
-				fmt.Println("3. Keluar")
-				fmt.Print("Pilih 1/2/3? ")
-				fmt.Scan(&pilih)
-				fmt.Println()
-				if pilih == 1 {
-					cariData()
-					fmt.Println()
-				} else if pilih == 2 {
-					bacaData(Data, nData)
+				BacadanCari()
+				fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
+				fmt.Scan(&x)
+				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+					BacadanCari()
 					fmt.Println()
 				}
 			}
@@ -74,26 +65,61 @@ func main() {
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
+				var x string
 				pengurutanData()
 				fmt.Println()
+				fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
+				fmt.Scan(&x)
+				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+					pengurutanData()
+					fmt.Println()
+				}
 			}
 		case 6:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
+				var x string
 				StatistikData()
 				fmt.Println()
+				fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
+				fmt.Scan(&x)
+				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+					StatistikData()
+					fmt.Println()
+				}
 			}
 		case 7:
 		}
 		if pilihan == 0 {
+			fmt.Println("Selamat Tinggal dan Terimakasih Telah Menggunakan Aplikasi :)")
 			break
 		}
 	}
 
 }
 
-func bacaData(A DataSampah, n int) {
+func BacadanCari() {
+	var pilih int
+	fmt.Println()
+	fmt.Println("==========Selamat Datang di Menu Baca dan Cari Data Sampah==========")
+	fmt.Println("")
+	fmt.Println("1. Cari Data Sampah ")
+	fmt.Println("2. Cetak semua Data Sampah")
+	fmt.Println("3. Keluar")
+	fmt.Print("Pilih 1/2/3? ")
+	fmt.Scan(&pilih)
+	fmt.Println()
+	if pilih == 1 {
+		cariData()
+		fmt.Println()
+	} else if pilih == 2 {
+		cetakData(Data, nData)
+		fmt.Println()
+	}
+}
+
+func cetakData(A DataSampah, n int) {
 	fmt.Println("Sampah yang sudah kamu inputkan: ")
 	for i := 0; i < n; i++ {
 		fmt.Println(i+1, ". ", A[i].Jenis_Sampah, A[i].Jumlah_Sampah)
@@ -108,16 +134,43 @@ func tambahHapusData() {
 	fmt.Println()
 	fmt.Println("1. Tambah Data Sampah")
 	fmt.Println("2. Hapus Data Sampah")
-	fmt.Println("3. Keluar")
-	fmt.Print("Pilih 1/2/3? ")
+	fmt.Println("3. Edit Data")
+	fmt.Println("4. Keluar")
+	fmt.Print("Pilih 1/2/3/4? ")
 	fmt.Scan(&x)
 	fmt.Println()
 	if x == 1 {
 		fmt.Println()
 		TambahData(&Data, &nData)
 	} else if x == 2 {
-		fmt.Println("Data sampah mana yang ingin anda hapus?")
+		fmt.Println()
 		hapusData(&Data, &nData)
+	} else if x == 3 {
+		fmt.Println()
+		EditData(&Data, &nData)
+	}
+}
+
+func EditData(A *DataSampah, n *int) {
+	var i int = 0
+	var Jenis string
+	var ketemu bool = false
+	cetakData(Data, nData)
+	fmt.Println()
+	fmt.Print("Data Sampah Apa Yang Ingin Kamu Ubah? ")
+	fmt.Scan(&Jenis)
+	for i < *n && !ketemu {
+		ketemu = Jenis == A[i].Jenis_Sampah
+		if ketemu {
+			fmt.Print("Mau ubah menjadi berapa kg? ")
+			fmt.Scan(&A[i].Jumlah_Sampah)
+			fmt.Println()
+			fmt.Println("Data", Jenis, "telah diubah menjadi", A[i].Jumlah_Sampah, "kg")
+		}
+		i++
+	}
+	if ketemu == false {
+		fmt.Println("Data Tidak Ditemukan :(")
 	}
 }
 
@@ -147,13 +200,17 @@ func hapusData(A *DataSampah, n *int) {
 			for j = i; j < *n-1; j++ {
 				A[j] = A[j+1]
 			}
+			fmt.Println()
 			fmt.Println("Data Berhasil Dihapus :)")
 			ketemu = true
 			*n = *n - 1
+			fmt.Println()
 		}
 	}
 	if ketemu == false {
-		fmt.Println("Data yang kamu ingin hapus tidak ditemukan:(")
+		fmt.Println()
+		fmt.Println("Data yang kamu ingin hapus tidak ditemukan :(")
+		fmt.Println()
 	}
 }
 
