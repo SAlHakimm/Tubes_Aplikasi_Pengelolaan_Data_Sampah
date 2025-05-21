@@ -58,7 +58,7 @@ func main() {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
 				BacadanCari()
-				fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
+				fmt.Print("Apakah kamu masih ingin membaca dan mencari data (Yes/No)? ")
 				fmt.Scan(&x)
 				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
 					BacadanCari()
@@ -72,7 +72,7 @@ func main() {
 				var x string
 				pengurutanData()
 				fmt.Println()
-				fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
+				fmt.Print("Apakah kamu masih ingin mengurutkan data (Yes/No)? ")
 				fmt.Scan(&x)
 				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
 					pengurutanData()
@@ -106,7 +106,7 @@ func main() {
 func BacadanCari() {
 	var pilih int
 	fmt.Println()
-	fmt.Println("==========Selamat Datang di Menu Baca dan Cari Data Sampah==========")
+	fmt.Println("==========Selamat Datang di Menu Cetak dan Cari Data Sampah==========")
 	fmt.Println("")
 	fmt.Println("1. Cari Data Sampah ")
 	fmt.Println("2. Cetak semua Data Sampah")
@@ -158,23 +158,52 @@ func tambahHapusData() {
 func EditData(A *DataSampah, n *int) {
 	var i int = 0
 	var Jenis string
+	var id, pilih int
 	var ketemu bool = false
+	fmt.Println()
+	fmt.Println("==========Selamat Datang di Menu Edit Data Sampah==========")
+	fmt.Println("")
+	fmt.Println("1. Berdasarkan ID")
+	fmt.Println("2. Berdasarkan Jenis")
+	fmt.Println("3. Keluar")
+	fmt.Print("Pilih 1/2/3? ")
+	fmt.Scan(&pilih)
+
 	cetakData(Data, nData)
 	fmt.Println()
-	fmt.Print("Data Sampah Apa Yang Ingin Kamu Ubah? ")
-	fmt.Scan(&Jenis)
-	for i < *n && !ketemu {
-		ketemu = Jenis == A[i].Jenis_Sampah
-		if ketemu {
-			fmt.Print("Mau ubah menjadi berapa kg? ")
-			fmt.Scan(&A[i].Jumlah_Sampah)
-			fmt.Println()
-			fmt.Println("Data", Jenis, "telah diubah menjadi", A[i].Jumlah_Sampah, "kg")
+
+	if pilih == 2 {
+		fmt.Print("Data Sampah Apa Yang Ingin Kamu Ubah? ")
+		fmt.Scan(&Jenis)
+		for i < *n && !ketemu {
+			ketemu = Jenis == A[i].Jenis_Sampah
+			if ketemu {
+				fmt.Print("Mau ubah menjadi berapa kg? ")
+				fmt.Scan(&A[i].Jumlah_Sampah)
+				fmt.Println()
+				fmt.Println("Data", Jenis, "telah diubah menjadi", A[i].Jumlah_Sampah, "kg")
+			}
+			i++
 		}
-		i++
-	}
-	if ketemu == false {
-		fmt.Println("Data Tidak Ditemukan :(")
+		if ketemu == false {
+			fmt.Println("Data Tidak Ditemukan :(")
+		}
+	} else if pilih == 1 {
+		fmt.Print("ID Sampah Apa Yang Ingin Kamu Ubah? ")
+		fmt.Scan(&id)
+		for i < *n && !ketemu {
+			ketemu = id == A[i].ID
+			if ketemu {
+				fmt.Print("Mau ubah menjadi berapa kg? ")
+				fmt.Scan(&A[i].Jumlah_Sampah)
+				fmt.Println()
+				fmt.Println("Data", Jenis, "telah diubah menjadi", A[i].Jumlah_Sampah, "kg")
+			}
+			i++
+		}
+		if ketemu == false {
+			fmt.Println("Data Tidak Ditemukan :(")
+		}
 	}
 }
 
@@ -392,7 +421,7 @@ func InputSampah(A *DataSampah, n *int) {
 				A[i].ID = generateID()
 				fmt.Printf("ID Sampah: %d\n\n", A[i].ID)
 			}
-			if A[i].Jenis_Sampah == "#" && A[i].Jumlah_Sampah == 0 {
+			if A[i].Jenis_Sampah == "#" || A[i].Jumlah_Sampah == 0 {
 				break
 			}
 			nData++
