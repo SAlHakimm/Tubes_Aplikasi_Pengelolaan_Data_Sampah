@@ -11,7 +11,7 @@ type Sampah struct {
 	Jumlah_Sampah     int
 }
 
-const NMAX int = 10000
+const NMAX int = 10
 
 type DataSampah [NMAX]Sampah
 
@@ -56,45 +56,23 @@ func main() {
 				fmt.Println()
 			}
 		case 4:
-			var x string
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
 				BacadanCari()
-				fmt.Print("Apakah kamu masih ingin membaca dan mencari data (Yes/No)? ")
-				fmt.Scan(&x)
-				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
-					BacadanCari()
-					fmt.Println()
-				}
 			}
 		case 5:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
-				var x string
 				pengurutanData()
-				fmt.Println()
-				fmt.Print("Apakah kamu masih ingin mengurutkan data (Yes/No)? ")
-				fmt.Scan(&x)
-				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
-					pengurutanData()
-					fmt.Println()
-				}
+
 			}
 		case 6:
 			if nData == 0 {
 				fmt.Println("Masukan Data Sampah Terlebih Dahulu")
 			} else {
-				var x string
 				StatistikData()
-				fmt.Println()
-				fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
-				fmt.Scan(&x)
-				if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
-					StatistikData()
-					fmt.Println()
-				}
 			}
 		case 7:
 		}
@@ -123,7 +101,10 @@ func BacadanCari() {
 	} else if pilih == 2 {
 		cetakData(Data, nData)
 		fmt.Println()
+	} else {
+		return
 	}
+
 }
 
 func cetakData(A DataSampah, n int) {
@@ -141,7 +122,7 @@ func tambahHapusData() {
 	fmt.Println()
 	fmt.Println("1. Tambah Data Sampah")
 	fmt.Println("2. Hapus Data Sampah")
-	fmt.Println("3. Edit Data")
+	fmt.Println("3. Edit Data Berat")
 	fmt.Println("4. Keluar")
 	fmt.Print("Pilih 1/2/3/4? ")
 	fmt.Scan(&x)
@@ -194,13 +175,18 @@ func TambahData(A *DataSampah, n *int) {
 	fmt.Println("Data yang kamu miliki (Disarankan tidak memasukan data yang sama): ")
 	cetakData(Data, nData)
 	fmt.Println()
+	if *n >= NMAX {
+		*n = NMAX
+		fmt.Println("Kapasitas Maximal tercapai = ", *n)
+		return
+	}
 	fmt.Print("Masukan Sampah: ")
 	fmt.Scan(&A[*n].Jenis_Sampah)
 
 	fmt.Print("Masukan Jumlah Sampah (kg): ")
 	fmt.Scan(&A[*n].Jumlah_Sampah)
 
-	fmt.Print("Masukan Jenis Sampah: ")
+	fmt.Print("Masukan Jenis Sampah Organik/Anorganik/B3: ")
 	fmt.Scan(&A[*n].sampah)
 	for {
 		if A[*n].sampah == "Organik" || A[*n].sampah == "organik" {
@@ -299,7 +285,7 @@ func hapusData(A *DataSampah, n *int) {
 	cetakData(Data, nData)
 	fmt.Println()
 
-	fmt.Print("Masukan id Sampah yang akan dihapus: ")
+	fmt.Print("ID Sampah apa yang akan dihapus: ")
 	fmt.Scan(&id)
 
 	for i = 0; i < *n && ketemu == false; i++ {
@@ -323,41 +309,105 @@ func hapusData(A *DataSampah, n *int) {
 }
 
 func cariData() {
-	var Jenis string
-	var id int
+	var pilih int
 	fmt.Println()
 	fmt.Println("==========Selamat Datang di Menu Cari Sampah==========")
 	fmt.Println("")
-	fmt.Println("ID Sampah apa yang kamu cari? ")
-	fmt.Scan(&id)
-	fmt.Println()
-	nama, jumlah, ditemukan := CariDataSeqID(&Data, nData, id)
-	if ditemukan {
-		fmt.Println("Sampah Jenis", nama, "memiliki jumlah:", jumlah, "kg")
+	fmt.Println("1. Cari Berdasarkan ID")
+	fmt.Println("2. Cari Berdasarkan Jenis")
+	fmt.Println("3. Keluar")
+	fmt.Print("1/2/3? ")
+	fmt.Scan(&pilih)
+	if pilih == 1 {
+		CariDataIDBin(&Data, nData)
+	} else if pilih == 2 {
+		CariDataJenisSeq(&Data, nData)
 	} else {
-		fmt.Println("Data sampah", Jenis, "tidak ditemukan")
+		return
+	}
 
+}
+
+func CariDataJenisSeq(A *DataSampah, n int) {
+	var pilih, i, j int
+	var x string
+	fmt.Println("Mau Cari Data Jenis Apa? ")
+	fmt.Println("1. Organik")
+	fmt.Println("2. Anorganik")
+	fmt.Println("3. B3")
+	fmt.Println("4. Keluar")
+	fmt.Print("Pilih 1/2/3/4? ")
+	fmt.Scan(&pilih)
+	if pilih == 1 {
+		for i = 0; i < n; i++ {
+			if A[i].sampah == "Organik" || A[i].sampah == "organik" {
+				j++
+				fmt.Printf("%d. ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", j, A[i].ID, A[i].Jenis_Sampah, A[i].Jumlah_Sampah, A[i].sampah, A[i].Metode_Daur_Ulang)
+			}
+		}
+	} else if pilih == 2 {
+		for i = 0; i < n; i++ {
+			if A[i].sampah == "Anorganik" || A[i].sampah == "anorganik" {
+				j++
+				fmt.Printf("%d. ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", j, A[i].ID, A[i].Jenis_Sampah, A[i].Jumlah_Sampah, A[i].sampah, A[i].Metode_Daur_Ulang)
+			}
+		}
+	} else if pilih == 3 {
+		for i = 0; i < n; i++ {
+			if A[i].sampah == "B3" || A[i].sampah == "b3" {
+				j++
+				fmt.Printf("%d. ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", j, A[i].ID, A[i].Jenis_Sampah, A[i].Jumlah_Sampah, A[i].sampah, A[i].Metode_Daur_Ulang)
+			}
+		}
+	} else {
+		return
+	}
+	fmt.Print("Apakah kamu masih ingin membaca dan mencari data (Yes/No)? ")
+	fmt.Scan(&x)
+	if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+		BacadanCari()
+		fmt.Println()
 	}
 }
 
-func CariDataSeqID(A *DataSampah, n int, x int) (string, int, bool) {
-	var i, jumlah int
-	var nama string
-	var ditemukan bool
-	ditemukan = false
-	for i = 0; i < n; i++ {
-		if A[i].ID == x {
-			nama = A[i].Jenis_Sampah
-			jumlah = A[i].Jumlah_Sampah
-			ditemukan = true
-			return nama, jumlah, ditemukan
+func CariDataIDBin(A *DataSampah, n int) {
+	var left, right, mid int
+	var idx int
+	var dicari int
+	var x string
+	fmt.Print("Masukan ID Yang Ingin Dicari: ")
+	fmt.Scan(&dicari)
+
+	left = 0
+	right = n - 1
+	idx = -1
+	for left <= right && idx == -1 {
+		mid = (left + right) / 2
+		if dicari < A[mid].ID {
+			right = mid - 1
+		} else if dicari > A[mid].ID {
+			left = mid + 1
+		} else {
+			idx = mid
 		}
+		mid = (left + right) / 2
 	}
-	return "", 0, ditemukan
+	if idx == -1 {
+		fmt.Println("Data yang kamu cari tidak ditemukan :(")
+	} else {
+		fmt.Printf("ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", A[idx].ID, A[idx].Jenis_Sampah, A[idx].Jumlah_Sampah, A[idx].sampah, A[idx].Metode_Daur_Ulang)
+	}
+	fmt.Print("Apakah kamu masih ingin membaca dan mencari data (Yes/No)? ")
+	fmt.Scan(&x)
+	if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+		BacadanCari()
+		fmt.Println()
+	}
 }
 
 func pengurutanData() {
 	var Pilih int
+	var x string
 	fmt.Println("==========Selamat Datang di Menu Pengurutan Data Sampah==========")
 	fmt.Println("")
 	fmt.Println("1. Pengurutan berdasarkan banyaknya sampah yang paling berat")
@@ -369,51 +419,75 @@ func pengurutanData() {
 	if Pilih == 1 {
 		fmt.Println()
 		fmt.Println("Pengurutan data Sampah dari yang paling berat: ")
-		SortDataMaxSelection(&Data, nData)
-		cetakData(Data, nData)
+		SortDataMaxSelection(Data, nData)
 	} else if Pilih == 2 {
 		fmt.Println()
 		fmt.Println("Pengurutan data Sampah dari yang paling kecil: ")
-		SortDataMinInsert(&Data, nData)
-		cetakData(Data, nData)
+		SortDataMinInsert(Data, nData)
 	} else if Pilih == 3 {
 		fmt.Println()
 		fmt.Println("Pengurutan data sampah berdasarkan jenis (Alphabet): ")
-		SortDataJenisInset(&Data, nData)
-		cetakData(Data, nData)
+		SortDataJenisInset(Data, nData)
+	} else {
+		return
+	}
+	fmt.Println()
+	fmt.Print("Apakah kamu masih ingin mengurutkan data (Yes/No)? ")
+	fmt.Scan(&x)
+	if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+		pengurutanData()
+		fmt.Println()
 	}
 }
 
 func PenjelasanSampah() {
 	var x int
+	var pilih int
 	fmt.Println()
 	fmt.Println("Penjelasan Tentang Sampah yang perlu kamu ketahui sebelum menginput data :")
 	fmt.Println("")
 	fmt.Println("Apa yang ingin Kamu Ketahui?")
-	fmt.Println("1. Sampah Organik: Sampah organik berasal dari sisa-sisa makhluk hidup, baik tumbuhan maupun hewan, yang secara alami dapat terurai oleh mikroorganisme (dekomposer). Proses penguraian ini menghasilkan zat-zat yang dapat menyuburkan tanah.")
-	fmt.Println("Contoh Sampah Organik: Sisa Makanan, Daun-daun kering/ranting, Kertas/Kardus bekas, Kotoran Hewan.")
-	fmt.Println("")
-	fmt.Println("2. Sampah Anorganik: Sampah anorganik adalah jenis sampah yang tidak dapat diuraikan secara alami oleh mikroorganisme dalam waktu yang relatif singkat. Beberapa jenis sampah anorganik dapat didaur ulang menjadi barang yang berguna.")
-	fmt.Println("Contoh Sampah Anorganik: Plastik, Kaca, Logam, Karet,Keramik. ")
-	fmt.Println("")
-	fmt.Println("3. Sampah B3: Sampah B3 mengandung zat-zat yang dapat membahayakan kesehatan manusia, makhluk hidup lain, dan lingkungan. Penanganannya memerlukan perlakuan khusus agar tidak mencemari lingkungan.")
-	fmt.Println("Contoh Sampah B3: Baterai, Lampu, Obat-obatan kadaluarsa, Pestisida, Cat, Aki bekas, Limbah Elektronik.")
-	fmt.Println("")
-	fmt.Println("Metode Daur Ulang Sampah :")
-	fmt.Println()
-	fmt.Println("1. Daur Ulang Mekanis (Mechanical Recycling): Metode daur ulang yang paling umum dan melibatkan proses fisik untuk mengubah sampah menjadi bahan baku baru.")
-	fmt.Println()
-	fmt.Println("2. Daur Ulang Kimia (Chemical Recycling): Metode ini melibatkan proses kimia untuk memecah sampah menjadi monomer atau bahan kimia dasar penyusunnya. Bahan-bahan ini kemudian dapat digunakan untuk membuat produk baru yang kualitasnya seringkali setara dengan produk dari bahan baku primer.")
-	fmt.Println()
-	fmt.Println("3. Daur Ulang Organik (Organic Recycling): Metode ini khusus untuk limbah organik yang dapat terurai secara hayati.")
-	fmt.Println()
-	fmt.Println("4. Daur Ulang Energi (Energy Recovery): Metode ini mengubah sampah menjadi energi melalui pembakaran terkontrol.")
-	fmt.Println()
-	fmt.Println("5. Daur Ulang Upcycling (Upcycling): Ini adalah bentuk daur ulang kreatif di mana barang bekas atau sampah diubah menjadi produk baru dengan nilai yang lebih tinggi atau fungsi yang berbeda, tanpa perlu proses pengolahan yang kompleks.")
-	fmt.Println()
-	fmt.Print("Ketik 0 jika sudah selesai membaca: ")
-	fmt.Scan(&x)
-	if x == 0 {
+	fmt.Println("1. Jenis Sampah")
+	fmt.Println("2. Metode Daur Ulang")
+	fmt.Println("3. Keluar")
+	fmt.Print("Pilih 1/2/3? ")
+	fmt.Scan(&pilih)
+	if pilih == 1 {
+		fmt.Println("Jenis Sampah :")
+		fmt.Println()
+		fmt.Println("1. Sampah Organik: Sampah organik berasal dari sisa-sisa makhluk hidup, baik tumbuhan maupun hewan, yang secara alami dapat terurai oleh mikroorganisme (dekomposer). Proses penguraian ini menghasilkan zat-zat yang dapat menyuburkan tanah.")
+		fmt.Println("Contoh Sampah Organik: Sisa Makanan, Daun-daun kering/ranting, Kertas/Kardus bekas, Kotoran Hewan.")
+		fmt.Println("")
+		fmt.Println("2. Sampah Anorganik: Sampah anorganik adalah jenis sampah yang tidak dapat diuraikan secara alami oleh mikroorganisme dalam waktu yang relatif singkat. Beberapa jenis sampah anorganik dapat didaur ulang menjadi barang yang berguna.")
+		fmt.Println("Contoh Sampah Anorganik: Plastik, Kaca, Logam, Karet,Keramik. ")
+		fmt.Println("")
+		fmt.Println("3. Sampah B3: Sampah B3 mengandung zat-zat yang dapat membahayakan kesehatan manusia, makhluk hidup lain, dan lingkungan. Penanganannya memerlukan perlakuan khusus agar tidak mencemari lingkungan.")
+		fmt.Println("Contoh Sampah B3: Baterai, Lampu, Obat-obatan kadaluarsa, Pestisida, Cat, Aki bekas, Limbah Elektronik.")
+		fmt.Println("")
+		fmt.Print("Ketik 0 jika sudah selesai membaca: ")
+		fmt.Scan(&x)
+		if x == 0 {
+			return
+		}
+	} else if pilih == 2 {
+		fmt.Println("Metode Daur Ulang Sampah :")
+		fmt.Println()
+		fmt.Println("1. Daur Ulang Mekanis (Mechanical Recycling): Metode daur ulang yang paling umum dan melibatkan proses fisik untuk mengubah sampah menjadi bahan baku baru.")
+		fmt.Println()
+		fmt.Println("2. Daur Ulang Kimia (Chemical Recycling): Metode ini melibatkan proses kimia untuk memecah sampah menjadi monomer atau bahan kimia dasar penyusunnya. Bahan-bahan ini kemudian dapat digunakan untuk membuat produk baru yang kualitasnya seringkali setara dengan produk dari bahan baku primer.")
+		fmt.Println()
+		fmt.Println("3. Daur Ulang Organik (Organic Recycling): Metode ini khusus untuk limbah organik yang dapat terurai secara hayati.")
+		fmt.Println()
+		fmt.Println("4. Daur Ulang Energi (Energy Recovery): Metode ini mengubah sampah menjadi energi melalui pembakaran terkontrol.")
+		fmt.Println()
+		fmt.Println("5. Daur Ulang Upcycling (Upcycling): Ini adalah bentuk daur ulang kreatif di mana barang bekas atau sampah diubah menjadi produk baru dengan nilai yang lebih tinggi atau fungsi yang berbeda, tanpa perlu proses pengolahan yang kompleks.")
+		fmt.Println()
+		fmt.Print("Ketik 0 jika sudah selesai membaca: ")
+		fmt.Scan(&x)
+		if x == 0 {
+			return
+		}
+	} else {
 		return
 	}
 }
@@ -437,12 +511,20 @@ func InputSampah(A *DataSampah, n *int) {
 		fmt.Println("Masukan Sampah: Plastik")
 		fmt.Println("Masukan Jumlah Sampah (kg): 5")
 		fmt.Println("Masukan Jenis Sampah: Anorganik")
-		fmt.Println("Catatan: Isi dengan '# 0' ketika sudah selesai menginput sampah")
+		fmt.Println("Catatan: Isi dengan '#' ketika sudah selesai menginput sampah")
 		fmt.Println("")
 		fmt.Println("Silahkan Masukan Data Sampah:")
 		for {
+			if *n >= NMAX {
+				*n = NMAX
+				fmt.Println("Kapasitas Maximal tercapai =", *n)
+				return
+			}
 			fmt.Print("Masukan Sampah: ")
 			fmt.Scan(&A[i].Jenis_Sampah)
+			if A[i].Jenis_Sampah == "#" {
+				break
+			}
 			fmt.Print("Masukan Jumlah Sampah (kg): ")
 			fmt.Scan(&A[i].Jumlah_Sampah)
 			if A[i].Jenis_Sampah != "#" && A[i].Jumlah_Sampah != 0 {
@@ -523,12 +605,8 @@ func InputSampah(A *DataSampah, n *int) {
 						A[i].Daur_Ulang = false
 					}
 				}
-
 				A[i].ID = generateID()
 				fmt.Printf("ID Sampah: %d\n\n", A[i].ID)
-			}
-			if A[i].Jenis_Sampah == "#" || A[i].Jumlah_Sampah == 0 {
-				break
 			}
 			nData++
 			i++
@@ -536,23 +614,7 @@ func InputSampah(A *DataSampah, n *int) {
 	}
 }
 
-func CariDataSeq(A *DataSampah, n int, x string) (string, int, bool) {
-	var i, jumlah int
-	var nama string
-	var ditemukan bool
-	ditemukan = false
-	for i = 0; i < n; i++ {
-		if A[i].Jenis_Sampah == x {
-			nama = A[i].Jenis_Sampah
-			jumlah = A[i].Jumlah_Sampah
-			ditemukan = true
-			return nama, jumlah, ditemukan
-		}
-	}
-	return "", 0, ditemukan
-}
-
-func SortDataMaxSelection(A *DataSampah, n int) {
+func SortDataMaxSelection(A DataSampah, n int) {
 	var i, idx, pass int
 	var temp Sampah
 
@@ -561,7 +623,7 @@ func SortDataMaxSelection(A *DataSampah, n int) {
 		idx = pass - 1
 		i = pass
 		for i < n {
-			if A[i].Jumlah_Sampah >= A[idx].Jumlah_Sampah {
+			if A[i].Jumlah_Sampah > A[idx].Jumlah_Sampah {
 				idx = i
 			}
 			i++
@@ -572,9 +634,12 @@ func SortDataMaxSelection(A *DataSampah, n int) {
 
 		pass++
 	}
+	for i := 0; i < n; i++ {
+		fmt.Printf("%d. ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", i+1, A[i].ID, A[i].Jenis_Sampah, A[i].Jumlah_Sampah, A[i].sampah, A[i].Metode_Daur_Ulang)
+	}
 }
 
-func SortDataMinInsert(A *DataSampah, n int) {
+func SortDataMinInsert(A DataSampah, n int) {
 	var pass, i int
 	var temp Sampah
 	pass = 1
@@ -582,15 +647,19 @@ func SortDataMinInsert(A *DataSampah, n int) {
 		i = pass
 		temp = A[pass]
 		for i > 0 && temp.Jumlah_Sampah < A[i-1].Jumlah_Sampah {
-			A[i].Jumlah_Sampah = A[i-1].Jumlah_Sampah
+			A[i] = A[i-1]
 			i--
 		}
-		A[i].Jumlah_Sampah = temp.Jumlah_Sampah
+		A[i] = temp
 		pass++
+	}
+
+	for i := 0; i < n; i++ {
+		fmt.Printf("%d. ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", i+1, A[i].ID, A[i].Jenis_Sampah, A[i].Jumlah_Sampah, A[i].sampah, A[i].Metode_Daur_Ulang)
 	}
 }
 
-func SortDataJenisInset(A *DataSampah, n int) {
+func SortDataJenisInset(A DataSampah, n int) {
 	var pass, i int
 	var temp Sampah
 	pass = 1
@@ -604,10 +673,15 @@ func SortDataJenisInset(A *DataSampah, n int) {
 		A[i] = temp
 		pass++
 	}
+
+	for i := 0; i < n; i++ {
+		fmt.Printf("%d. ID: %d, Sampah: %s, Jumlah: %d kg, Jenis: %s, Daur Ulang: %s\n", i+1, A[i].ID, A[i].Jenis_Sampah, A[i].Jumlah_Sampah, A[i].sampah, A[i].Metode_Daur_Ulang)
+	}
 }
 
 func StatistikData() {
 	var Pilih int
+	var x string
 	fmt.Println()
 	fmt.Println("==========Selamat Datang di Menu Statistik Data Sampah==========")
 	fmt.Println("")
@@ -622,6 +696,15 @@ func StatistikData() {
 		JumlahDataSampah(Data, nData)
 	} else if Pilih == 2 {
 		DaurUlang(&Data, nData)
+	} else {
+		return
+	}
+	fmt.Println()
+	fmt.Print("Apakah kamu masih ingin melihat statistik data (Yes/No)? ")
+	fmt.Scan(&x)
+	if x == "Yes" || x == "yes" || x == "Y" || x == "y" {
+		StatistikData()
+		fmt.Println()
 	}
 }
 
@@ -636,11 +719,26 @@ func JumlahDataSampah(A DataSampah, n int) {
 
 func DaurUlang(A *DataSampah, n int) {
 	var i, jumlah int
+	var persenan float64
 	jumlah = 0
 	for i = 0; i < n; i++ {
 		if A[i].Daur_Ulang == true {
 			jumlah = jumlah + A[i].Jumlah_Sampah
 		}
 	}
+	persenan = hitungPersen(Data, nData, jumlah)
 	fmt.Println("Jumlah Sampah Yang Berhasil Di Daur Ulang Seberat ", jumlah, " kg")
+	fmt.Printf("Sampah Yang di Daur Ulang %.2f%% Dari Data Yang Berhasil Dikumpulkan", persenan)
+}
+
+func hitungPersen(A DataSampah, n int, bagian int) float64 {
+	var i int
+	var Total int
+	var persen float64
+	for i = 0; i < n; i++ {
+		Total += A[i].Jumlah_Sampah
+
+	}
+	persen = (float64(bagian) / float64(Total)) * 100
+	return persen
 }
