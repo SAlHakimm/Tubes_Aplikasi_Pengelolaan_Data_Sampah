@@ -169,7 +169,7 @@ func EditData(A *DataSampah, n *int) {
 }
 
 func TambahData(A *DataSampah, n *int) {
-	var pilih int
+	var pilih, x int
 	fmt.Println("Silahkan masukan data sampah yang ingin kamu tambahkan:")
 	fmt.Println()
 	fmt.Println("Data yang kamu miliki (Disarankan tidak memasukan data yang sama): ")
@@ -186,8 +186,26 @@ func TambahData(A *DataSampah, n *int) {
 	fmt.Print("Masukan Jumlah Sampah (kg): ")
 	fmt.Scan(&A[*n].Jumlah_Sampah)
 
-	fmt.Print("Masukan Jenis Sampah Organik/Anorganik/B3: ")
-	fmt.Scan(&A[*n].sampah)
+	for {
+		fmt.Println("Masukan Jenis Sampah : ")
+		fmt.Println("1. Organik")
+		fmt.Println("2. Anorganik")
+		fmt.Println("3. B3")
+		fmt.Println("Pilih 1/2/3")
+		fmt.Scan(&x)
+		if x == 1 {
+			A[*n].sampah = "Organik"
+			break
+		} else if x == 2 {
+			A[*n].sampah = "Anorganik"
+			break
+		} else if x == 3 {
+			A[*n].sampah = "B3"
+			break
+		} else {
+			fmt.Println("Pilihan Tidak Valid, Silahkan Pilih Kembali")
+		}
+	}
 	for {
 		if A[*n].sampah == "Organik" || A[*n].sampah == "organik" {
 			fmt.Println("Pilih Metode Daur Ulang:")
@@ -499,7 +517,7 @@ func generateID() int {
 
 func InputSampah(A *DataSampah, n *int) {
 	var i int = 0
-	var pilih int
+	var pilih, x int
 	fmt.Println()
 	if *n != 0 {
 		fmt.Println("Jika ingin menginput data, masukan di menu tambah data")
@@ -510,7 +528,6 @@ func InputSampah(A *DataSampah, n *int) {
 		fmt.Println("Contoh Format Input: ")
 		fmt.Println("Masukan Sampah: Plastik")
 		fmt.Println("Masukan Jumlah Sampah (kg): 5")
-		fmt.Println("Masukan Jenis Sampah: Anorganik")
 		fmt.Println("Catatan: Isi dengan '#' ketika sudah selesai menginput sampah")
 		fmt.Println("")
 		fmt.Println("Silahkan Masukan Data Sampah:")
@@ -528,8 +545,26 @@ func InputSampah(A *DataSampah, n *int) {
 			fmt.Print("Masukan Jumlah Sampah (kg): ")
 			fmt.Scan(&A[i].Jumlah_Sampah)
 			if A[i].Jenis_Sampah != "#" && A[i].Jumlah_Sampah != 0 {
-				fmt.Print("Masukan Jenis Sampah (Organik/Anorganik/B3): ")
-				fmt.Scan(&A[i].sampah)
+				for {
+					fmt.Println("Masukan Jenis Sampah : ")
+					fmt.Println("1. Organik")
+					fmt.Println("2. Anorganik")
+					fmt.Println("3. B3")
+					fmt.Println("Pilih 1/2/3")
+					fmt.Scan(&x)
+					if x == 1 {
+						A[i].sampah = "Organik"
+						break
+					} else if x == 2 {
+						A[i].sampah = "Anorganik"
+						break
+					} else if x == 3 {
+						A[i].sampah = "B3"
+						break
+					} else {
+						fmt.Println("Pilihan Tidak Valid, Silahkan Pilih Kembali")
+					}
+				}
 				if A[i].sampah == "Organik" || A[i].sampah == "organik" {
 					fmt.Println("Pilih Metode Daur Ulang:")
 					fmt.Println("1. Daur Ulang Organik (Organic Recycling)")
@@ -605,6 +640,7 @@ func InputSampah(A *DataSampah, n *int) {
 						A[i].Daur_Ulang = false
 					}
 				}
+
 				A[i].ID = generateID()
 				fmt.Printf("ID Sampah: %d\n\n", A[i].ID)
 			}
