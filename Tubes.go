@@ -482,7 +482,7 @@ func PenjelasanSampah() {
 		fmt.Println("3. Sampah B3: Sampah B3 mengandung zat-zat yang dapat membahayakan kesehatan manusia, makhluk hidup lain, dan lingkungan. Penanganannya memerlukan perlakuan khusus agar tidak mencemari lingkungan.")
 		fmt.Println("Contoh Sampah B3: Baterai, Lampu, Obat-obatan kadaluarsa, Pestisida, Cat, Aki bekas, Limbah Elektronik.")
 		fmt.Println("")
-		fmt.Print("Ketik 0 jika sudah selesai membaca: ")
+		fmt.Print("Ketik angka atau huruf apa saja jika sudah selesai membaca: ")
 		fmt.Scan(&x)
 		if x == 0 {
 			return
@@ -500,7 +500,7 @@ func PenjelasanSampah() {
 		fmt.Println()
 		fmt.Println("5. Daur Ulang Upcycling (Upcycling): Ini adalah bentuk daur ulang kreatif di mana barang bekas atau sampah diubah menjadi produk baru dengan nilai yang lebih tinggi atau fungsi yang berbeda, tanpa perlu proses pengolahan yang kompleks.")
 		fmt.Println()
-		fmt.Print("Ketik 0 jika sudah selesai membaca: ")
+		fmt.Print("Ketik angka atau huruf apa saja jika sudah selesai membaca: ")
 		fmt.Scan(&x)
 		if x == 0 {
 			return
@@ -722,7 +722,7 @@ func StatistikData() {
 	fmt.Println("==========Selamat Datang di Menu Statistik Data Sampah==========")
 	fmt.Println("")
 	fmt.Println("Apa yang ingin anda lihat ketahui?")
-	fmt.Println("1. Jumlah Total Data Sampah Yang Sudah Dikumpulkan")
+	fmt.Println("1. Jumlah Total Data Berat Sampah Yang Sudah Dikumpulkan")
 	fmt.Println("2. Jumlah Total Data Sampah Yang di Daur Ulang")
 	fmt.Println("3. Keluar")
 	fmt.Print("Pilih 1/2/3? ")
